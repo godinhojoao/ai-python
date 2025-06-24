@@ -341,3 +341,90 @@ except Exception as inst:
     print("y =", y)
 
 print("---------------------")
+
+# 11. More Data Structures https://docs.python.org/3/tutorial/datastructures.html
+
+# 11.1 Using lists as Stacks
+stack = [3, 4, 5]
+stack.append(6)  # [3, 4, 5, 6]
+stack.pop()  # [3, 4, 5]
+stack.pop()  # [3, 4]
+stack.pop()  # [3]
+
+## 11.2 Using lists as Queues
+from collections import deque
+
+queue = deque(["Joao"])
+queue.append("John")  # deque(['Joao', 'John'])
+queue.popleft()  # deque(['John']) FIFO
+queue.popleft()  # # deque([])
+
+## 11.3 List Comprehensions
+# List comprehension is a short way to create a list using a single line of code. -> [expression for item in iterable if condition]
+even_squares = [x**2 for x in range(10) if x % 2 == 0]
+print(f"even_squares: {even_squares}")  # even_squares: [0, 4, 16, 36, 64]
+
+# Nested loop on list comprehension
+pairs = [(x, y) for x in [1, 2] for y in [3, 4]]  # list of tuples [(x,y)]
+print(f"pairs: {pairs}")  # pairs: [(1, 3), (1, 4), (2, 3), (2, 4)]
+
+## 11.4 Tuples and Sequences
+# A tuple is a sequence of values, like a list, but immutable.
+
+t = (1, 2, "hello!")
+print(t[0])  # 1
+print(t)  # (1, 2, 'hello!')
+# t[0] = 88888 # TypeError: 'tuple' object does not support item assignment
+
+# tuples can be nested
+u = (t, (1, 2, 3, 4, 5))
+print(u)  # ((1, 2, 'hello!'), (1, 2, 3, 4, 5))
+
+# Tuples can be "joined"
+t1 = (1, 2)
+t2 = (3, 4)
+t3 = t1 + t2
+print(t3)  # (1, 2, 3, 4)
+
+# Tuples can contain mutable objects:
+v = ([1, 2, 3], [3, 2, 1])
+v[0].append(4)
+print(v)  # ([1, 2, 3, 4], [3, 2, 1])
+
+# Unpacking tuples
+t = (1, 2, 3)
+x, y, z = t
+print("x,y,z:", x, y, z)
+# Unpacking lists
+t = [1, 2, 3]
+x, y, z = t
+print("x,y,z:", x, y, z)
+# Unpacking dictionary keys
+d = {"name": "Joao", "age": 2}
+k1, k2 = d
+print(k1, k2)  # name age
+
+## 11.5 Sets (same as set's theory)
+# An unordered collection with no duplicate elements.
+# Allows set operations (union, intersection, etc.)
+
+# Duplicates are removed automatically.
+basket = {"apple", "orange", "apple", "pear", "banana"}
+print(basket)  # {'orange', 'banana', 'pear', 'apple'}
+
+print("orange" in basket)  # True
+print("test" in basket)  # False
+
+# Set operations
+a = set(["test1", "test2"])
+b = set(["test2"])
+print(f"a - b: {a - b}")  # in a but not in b
+print(f"a | b: {a | b}")  # union "or"
+print(f"a & b: {a & b}")  # intersection "and"
+print(f"a ^ b: {a ^ b}")  # symmetric difference (in a or b, but not both)
+
+# Set comprehension (like list comprehension)
+a = {x for x in "abracadabra" if x not in "abc"}
+print("set compreheension", a)  # {'r', 'd'}
+
+print("---------------------")
