@@ -26,7 +26,8 @@
 
 - 3. Install build tools and dependencies
 
-  - `uv sync --locked` # if you are using uv + pyproject.toml
+  - `uv sync` # if you are using uv + pyproject.toml
+  - `uv sync --locked` # to get uv.lock versions
   - `uv sync --locked --no-dev` # to avoid dev dependencies
     - OR
   - `pip install -r requirements.txt`
