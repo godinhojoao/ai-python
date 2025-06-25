@@ -1,11 +1,11 @@
+from contextlib import asynccontextmanager
 from fastapi import FastAPI, Request, Response
 import httpx
 
 app = FastAPI()
 
-
-@app.on_event("startup")
-async def on_startup():
+@asynccontextmanager
+async def lifespan(app: FastAPI):
     print("App is running on port 8000 at http://localhost:8000")
 
 
