@@ -428,3 +428,33 @@ a = {x for x in "abracadabra" if x not in "abc"}
 print("set compreheension", a)  # {'r', 'd'}
 
 print("---------------------")
+
+# 12. Async IO
+# Used to write asynchronous, non-blocking code, typically to handle I/O bound tasks (e.g., file/network access, database with async drivers).
+# We make it using coroutines https://docs.python.org/3/library/asyncio-task.html#coroutine
+import asyncio
+
+async def say_hello():
+    await asyncio.sleep(1)
+    print("Hello")
+
+async def main():
+    await say_hello()
+
+asyncio.run(main())
+
+
+# concurrent example
+async def task(name, delay):
+    await asyncio.sleep(delay)
+    print(f"Task {name} finished after {delay} sec")
+
+async def main():
+    await asyncio.gather(
+        task("A", 2),
+        task("B", 1),
+    )
+
+asyncio.run(main()) # print B and then A
+
+print("---------------------")
