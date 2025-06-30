@@ -8,6 +8,7 @@
 - 2. `source .venv/bin/activate`
 - 3. `uv sync --locked`
 - 4. `python3 main.py`
+- 5. run model `phi-2` on `LM studio`
 
 ## Example of response with and without rag:
 

@@ -154,15 +154,6 @@ def query_llm(prompt):
     resp.raise_for_status()
     return resp.json()["choices"][0]["message"]["content"].strip()
 
-def save_faiss_vectorstore(vectordb, persist_dir):
-    import faiss
-    os.makedirs(persist_dir, exist_ok=True)
-    faiss.write_index(vectordb.index, os.path.join(persist_dir, "faiss.index"))
-    with open(os.path.join(persist_dir, "docs.pkl"), "wb") as f:
-        pickle.dump(vectordb.docstore._dict, f)
-    with open(os.path.join(persist_dir, "index_to_docstore_id.pkl"), "wb") as f:
-        pickle.dump(vectordb.index_to_docstore_id, f)
-
 def getChatCompletionRag(question: str, vectorstore_dir: str = "./vectorstore_dir", top_k=3) -> str:
     vectordb = load_faiss_vectorstore(vectorstore_dir)
     contexts = retrieve_docs(question, vectordb, top_k=top_k)
