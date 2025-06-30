@@ -129,6 +129,10 @@ name3 = None
 if not name3:  # logical not
     print("your name isn't a truthy value")
 
+# ternary
+x = 10
+result = "even" if x % 2 == 0 else "odd" # valueIfTrue if condition else valueIfFalse
+
 print("---------------------")
 
 # 5. Loops

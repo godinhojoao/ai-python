@@ -1,5 +1,5 @@
 [project]
-name = "voice-chatbot-llm-rag"
+name = "3-simple-api"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"

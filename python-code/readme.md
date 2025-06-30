@@ -13,24 +13,22 @@
 - `Pylint`: Widely used linter for code quality and error checking.
 - `pyproject.toml`: Central configuration file for builds, dependencies, and tool setting
 
-## Setting Up The Environment
+## Starting new project (with poetry + uv):
 
-- 1. Configure your `pyproject.toml` or only `requirements.txt`
-- 2. Create and activate a virtual environment
-
-  - `python3 -m venv .venv`
-    - OR
-  - `uv venv .venv`
-  - `source .venv/bin/activate` -> macos/linux (to activate)
-  - `deactivate` -> to deactivate
-
-- 3. Install build tools and dependencies
-
-  - `uv sync` # if you are using uv + pyproject.toml
-  - `uv sync --locked` # to get uv.lock versions
-  - `uv sync --locked --no-dev` # to avoid dev dependencies
-    - OR
-  - `pip install -r requirements.txt`
+- Create and activate venv:
+  - `uv venv venvName`
+  - `source venvName/bin/activate`
+- **Managing dependencies**:
+  - Init pyproject.toml to control lib versions:
+    - `poetry init`
+  - Add dependencies to your project:
+    - `poetry add lib` or `poetry add requests@2.28.1`
+  - Add dev dependencies:
+    - `poetry add --dev lib`
+  - Remove dependencies:
+    - `poetry remove lib`
+- Install dependencies from pyproject.toml: `uv sync`
+- Install dependencies from uv.lock: `uv sync --locked`
 
 ## How to run linter
 
@@ -46,7 +44,9 @@
 
 ## For code examples:
 
-- Check the `.py` files starting on [1-syntax.py](./1-syntax.py)
+- [1-sintax](./1-syntax/1-syntax.py)
+- [2-llmRag](./2-llmRag/main.py)
+- [3-simpleApi](./3-simpleApi/3-simple-api.py)
 
 ## References
 
