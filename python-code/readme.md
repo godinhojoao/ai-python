@@ -44,15 +44,21 @@
 
 ## How to run linter
 
-- Install pylint `pip install pylint`
+- Install pylint and black as dev dependencies: `uv add --dev pylint black`
 - Configure a .pylintrc `pylint --generate-rcfile > .pylintrc`
 - Run with:
-  - `pylint yourpackage/`
-  - `pylint your_script.py`
+  - `uv run pylint .` (within the project folder)
+  - `uv run pylint yourpackage/`
+  - `uv run pylint your_script.py`
+  - add in the end of pyproject.toml
+    ```
+    [tool.pylint.main]
+    ignore = [".venv"]
+    ```
 - Automatically fix some code style issues: (this will not fix all lint issues)
-  - Install black `pip install black`
-  - `black yourpackage/`
-  - `black your_script.py`
+  - `uv run black .` (within the project folder)
+  - `uv run black yourpackage/`
+  - `uv run black your_script.py`
 
 ## For code examples:
 

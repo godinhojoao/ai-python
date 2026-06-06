@@ -25,3 +25,15 @@ build-backend = "poetry.core.masonry.api"
 [tool.poetry.group.dev.dependencies]
 black = "^25.1.0"
 
+[dependency-groups]
+dev = [
+    "black>=26.5.1",
+    "pylint>=4.0.5",
+]
+
+[tool.pylint.main]
+ignore = [".venv"]
+
+[tool.pylint.messages_control]
+disable = ["missing-module-docstring", "missing-function-docstring"]
+

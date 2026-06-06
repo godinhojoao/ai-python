@@ -1,3 +1,5 @@
-from .llm_utils import getChatCompletion, getChatCompletionRag
+"""LLM utility functions for chat completion and RAG."""
 
-__all__ = ["getChatCompletion", "getChatCompletionRag"]
+from .llm_utils import get_chat_completion, get_chat_completion_rag
+
+__all__ = ["get_chat_completion", "get_chat_completion_rag"]

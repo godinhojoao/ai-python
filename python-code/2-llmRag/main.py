@@ -1,9 +1,10 @@
-from llm_utils import getChatCompletionRag, getChatCompletion
+"""Entry point for the RAG chatbot example."""
 
-vectorstore_dir = './scripts/vector_store_dir'
-responseRag = getChatCompletionRag("Who is João Godinho?", vectorstore_dir)
-response = getChatCompletion("Who is João Godinho?")
+from llm_utils import get_chat_completion_rag, get_chat_completion
+
+VECTORSTORE_DIR = "./scripts/vector_store_dir"
+response_rag = get_chat_completion_rag("Who is João Godinho?", VECTORSTORE_DIR)
+response = get_chat_completion("Who is João Godinho?")
 
 print(f"\n\nCOMMON RESPONSE: {response}\n\n")
-
-print(f"RESPONSE RAG: {responseRag}")
+print(f"RESPONSE RAG: {response_rag}")

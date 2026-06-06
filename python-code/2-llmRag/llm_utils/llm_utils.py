@@ -1,12 +1,16 @@
+"""Utility functions for LLM chat completion and RAG pipeline."""
+
 import os
 import pickle
-import requests
-import time
 import re
+import time
+
+import faiss
+import requests
 import tiktoken
+from langchain.docstore.in_memory import InMemoryDocstore
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_community.vectorstores import FAISS
-from langchain.docstore.in_memory import InMemoryDocstore
 
 URL = "http://localhost:1234/v1/chat/completions"
 HEADERS = {"Content-Type": "application/json", "Authorization": "Bearer lm-studio"}
@@ -17,7 +21,7 @@ MAX_MODEL_CONTEXT_TOKENS = 2534
 SYSTEM_PROMPT_RAG = (
     "You are a helpful, concise assistant.\n"
     "If asked for an opinion, always respond first that you are an AI and do not have opinions.\n"
-    "Read the provided document excerpts carefully and answer the user's question based only on them.\n"
+    "Read the provided excerpts carefully and answer the user's question based only on them.\n"
     "Do not repeat or copy the excerpts verbatim, do not mention license or metadata.\n"
     "Provide clear, relevant, and informative answers.\n"
     "Do not generate harmful, offensive, or sensitive content.\n"
@@ -35,7 +39,9 @@ SYSTEM_PROMPT_COMMON = (
     "Always answer user questions clearly and safely."
 )
 
-def getChatCompletion(user_text: str) -> str:
+
+def get_chat_completion(user_text: str) -> str:
+    """Send a plain chat message to the LLM and return the response."""
     data = {
         "model": MODEL_NAME,
         "messages": [
@@ -67,9 +73,9 @@ def getChatCompletion(user_text: str) -> str:
     except (KeyError, IndexError) as e:
         return f"Unexpected response format: {e}"
 
-# RAG:
+
 def load_faiss_vectorstore(persist_dir):
-    import faiss
+    """Load a FAISS vectorstore from disk."""
     embedding = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
     index = faiss.read_index(os.path.join(persist_dir, "faiss.index"))
     with open(os.path.join(persist_dir, "docs.pkl"), "rb") as f:
@@ -80,46 +86,53 @@ def load_faiss_vectorstore(persist_dir):
     vectordb = FAISS(embedding, index, docstore, index_to_docstore_id=index_to_docstore_id)
     return vectordb
 
+
 def retrieve_docs(query, vectordb, top_k=3):
+    """Retrieve the top_k most relevant documents for a query."""
     results = vectordb.similarity_search(query, k=top_k)
     return [doc.page_content for doc in results]
 
+
 def count_tokens(text):
+    """Count the number of tokens in a text string."""
     tokens = encoding.encode(text)
-    return len(tokens) + 10  # small margin for safety
+    return len(tokens) + 10
+
 
 def truncate_text_by_tokens(text, max_tokens):
+    """Truncate text to fit within a maximum token count."""
     tokens = encoding.encode(text)
     if len(tokens) <= max_tokens or max_tokens <= 0:
         return text if max_tokens > 0 else ""
-    truncated_tokens = tokens[:max_tokens]
-    return encoding.decode(truncated_tokens)
+    return encoding.decode(tokens[:max_tokens])
+
 
 def count_message_tokens(messages):
-    total = 0
-    for m in messages:
-        total += count_tokens(m["content"])
-    return total
+    """Count total tokens across a list of messages."""
+    return sum(count_tokens(m["content"]) for m in messages)
+
 
 def build_prompt(contexts, question, max_total_tokens=1024):
+    """Build a RAG prompt that fits within the token budget."""
     prompt_base = "Use the document excerpts to answer the question.\n\n"
     question_part = f"\n\nQuestion: {question}\nAnswer:"
-    system_tokens = count_tokens(SYSTEM_PROMPT_RAG)
-    question_tokens = count_tokens(question_part)
-    prompt_base_tokens = count_tokens(prompt_base)
+    overhead = (
+        count_tokens(SYSTEM_PROMPT_RAG)
+        + count_tokens(question_part)
+        + count_tokens(prompt_base)
+    )
 
-    available_tokens_for_context = max_total_tokens - system_tokens - question_tokens - prompt_base_tokens
-    if available_tokens_for_context <= 0:
+    available = max_total_tokens - overhead
+    if available <= 0:
         raise ValueError("Question + system prompt too long.")
 
     included = []
     tokens_used = 0
-
     for ctx in contexts:
-        remaining_tokens = available_tokens_for_context - tokens_used
-        if remaining_tokens <= 0:
+        remaining = available - tokens_used
+        if remaining <= 0:
             break
-        ctx_truncated = truncate_text_by_tokens(ctx, remaining_tokens)
+        ctx_truncated = truncate_text_by_tokens(ctx, remaining)
         ctx_tokens = count_tokens(ctx_truncated)
         if ctx_tokens == 0:
             break
@@ -127,11 +140,11 @@ def build_prompt(contexts, question, max_total_tokens=1024):
         tokens_used += ctx_tokens
 
     context_text = "\n---\n".join(included)
+    return f"{prompt_base}{context_text}{question_part}"
 
-    prompt = f"{prompt_base}{context_text}{question_part}"
-    return prompt
 
 def query_llm(prompt):
+    """Send a prompt to the LLM and return the answer text."""
     messages = [
         {"role": "system", "content": SYSTEM_PROMPT_RAG},
         {"role": "user", "content": prompt},
@@ -154,9 +167,12 @@ def query_llm(prompt):
     resp.raise_for_status()
     return resp.json()["choices"][0]["message"]["content"].strip()
 
-def getChatCompletionRag(question: str, vectorstore_dir: str = "./vectorstore_dir", top_k=3) -> str:
+
+def get_chat_completion_rag(
+    question: str, vectorstore_dir: str = "./vectorstore_dir", top_k=3
+) -> str:
+    """Answer a question using RAG: retrieve context then query the LLM."""
     vectordb = load_faiss_vectorstore(vectorstore_dir)
     contexts = retrieve_docs(question, vectordb, top_k=top_k)
     prompt = build_prompt(contexts, question)
-    answer = query_llm(prompt)
-    return answer
+    return query_llm(prompt)
