@@ -13,22 +13,34 @@
 - `Pylint`: Widely used linter for code quality and error checking.
 - `pyproject.toml`: Central configuration file for builds, dependencies, and tool setting
 
-## Starting new project (with poetry + uv):
+## Starting new project (with uv):
 
 - Create and activate venv:
   - `uv venv venvName`
   - `source venvName/bin/activate`
 - **Managing dependencies**:
   - Init pyproject.toml to control lib versions:
-    - `poetry init`
+    - `uv init`
   - Add dependencies to your project:
-    - `poetry add lib` or `poetry add requests@2.28.1`
+    - `uv add lib` or `uv add requests==2.28.1`
   - Add dev dependencies:
-    - `poetry add --dev lib`
+    - `uv add --dev lib`
   - Remove dependencies:
-    - `poetry remove lib`
+    - `uv remove lib`
 - Install dependencies from pyproject.toml: `uv sync`
 - Install dependencies from uv.lock: `uv sync --locked`
+
+## other `uv` commands 
+- **Running scripts**:
+  - Run a script inside the project env without activating it manually:
+    - `uv run python script.py`
+    - `uv run pytest` (or any other tool)
+  - Useful in CI/CD or when you don't want to think about activating/deactivating venvs
+- **Managing Python versions**:
+  - Install a specific Python version: `uv python install 3.12`
+  - List available/installed versions: `uv python list`
+  - Pin the project to a Python version: `uv python pin 3.12` (creates a `.python-version` file)
+  - uv will automatically use the pinned version when creating venvs
 
 ## How to run linter
 

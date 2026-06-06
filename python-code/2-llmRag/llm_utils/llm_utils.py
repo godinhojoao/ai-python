@@ -10,9 +10,9 @@ from langchain.docstore.in_memory import InMemoryDocstore
 
 URL = "http://localhost:1234/v1/chat/completions"
 HEADERS = {"Content-Type": "application/json", "Authorization": "Bearer lm-studio"}
-MODEL_NAME = "phi-2"
+MODEL_NAME = "qwen/qwen2.5-coder-14b"
 encoding = tiktoken.get_encoding("gpt2")
-MAX_MODEL_CONTEXT_TOKENS = 2048
+MAX_MODEL_CONTEXT_TOKENS = 2534
 
 SYSTEM_PROMPT_RAG = (
     "You are a helpful, concise assistant.\n"
@@ -37,7 +37,7 @@ SYSTEM_PROMPT_COMMON = (
 
 def getChatCompletion(user_text: str) -> str:
     data = {
-        "model": "phi-2",
+        "model": MODEL_NAME,
         "messages": [
             {"role": "system", "content": SYSTEM_PROMPT_COMMON},
             {"role": "user", "content": user_text},

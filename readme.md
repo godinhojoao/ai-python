@@ -1,9 +1,8 @@
-# Notes about AI, Data Science and Python
+# ai-python
 
-- [1-AI-intro.md](1-AI-intro.md)
-- [2-tech-stack-AI.md](2-tech-stack-AI.md)
-- [3-gen-AI.md](3-gen-AI.md)
-- Python Code and Examples
-  - [1-sintax](./python-code/1-syntax/1-syntax.py)
-  - [2-llmRag](./python-code/2-llmRag/main.py)
-  - [3-simpleApi](./python-code/3-simpleApi/3-simple-api.py)
+> This repository offers a shallow, practice-focused perspective on AI and its applications, not a deep dive into the math or theory behind AI models.
+- Notes and practical examples on AI and Python, covering RAG workflows, Python syntax, environment setup, code quality tools, and FastAPI-based API examples to help build intelligent and maintainable applications.
+
+## folders
+- `/contents` basics behind some AI topics
+- `python-code` examples related to python syntax, libs to build http apis, llm rag, and more.
