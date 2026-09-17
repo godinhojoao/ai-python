@@ -34,6 +34,9 @@ print(x)  # prints: None
 
 # myInput = input("what's your name?")
 # print(f"yourname is {myInput}")  # if needed we could try to convert like int(myInput)
+# myfloat = float(input("send a float: "))
+# print(f"float {myfloat:.2f}")
+# print(f"float {round(myfloat, 2)}")
 
 print("---------------------")
 # 2. Defining variables
@@ -462,3 +465,11 @@ async def main():
 asyncio.run(main()) # print B and then A
 
 print("---------------------")
+
+## 13. lambda arguments: expression
+
+add = lambda a,b : a+b
+onlybiggerthan2 = lambda a : a>2
+
+print("add: ", add(5,2))
+print(tuple(filter(onlybiggerthan2, [1, 2, 3, 1, 1, 5])))

@@ -15,20 +15,21 @@
 
 ## Starting new project (with uv):
 
-- Create and activate venv:
-  - `uv venv venvName`
-  - `source venvName/bin/activate`
+- Create the project (first step, generates `pyproject.toml`):
+  - `uv init projectName` — also creates a sample `main.py`
+  - `uv init --bare projectName` — only `pyproject.toml`, no `main.py`, so you use your own file names
+- You do **not** need to create or activate a venv: `uv add` / `uv run` / `uv sync` create `.venv` automatically.
+  - Optional, only if you want a shell where bare `python` and `pytest` resolve to the project: `source .venv/bin/activate`
+  - Keep the default name `.venv`. uv only auto-detects that name, so `uv venv otherName` makes `uv run` build a second env instead of using it.
 - **Managing dependencies**:
-  - Init pyproject.toml to control lib versions:
-    - `uv init`
   - Add dependencies to your project:
     - `uv add lib` or `uv add requests==2.28.1`
   - Add dev dependencies:
     - `uv add --dev lib`
   - Remove dependencies:
     - `uv remove lib`
-- Install dependencies from pyproject.toml: `uv sync`
-- Install dependencies from uv.lock: `uv sync --locked`
+- Install dependencies from `uv.lock` (regenerating it first if `pyproject.toml` changed): `uv sync`
+- Same, but fails instead of updating `uv.lock` when it is out of date (use in CI): `uv sync --locked`
 
 ## other `uv` commands 
 - **Running scripts**:
